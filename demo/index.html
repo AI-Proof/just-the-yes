@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Just the Yes</title>
+<meta name="description" content="Design demo: volunteer matching where the organisation gets your yes, not your profile.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+:root{
+  --bg:#f2f4f3; --panel:#ffffff; --ink:#18221f; --muted:#56635e; --line:#d6ddd9;
+  --stay:#1d6b64; --stay-soft:#e1efec; --cross:#b4631a; --cross-soft:#f8ead9;
+  --accent:#1d4f73; --accent-soft:#e2ebf2; --ok:#2f7a3c; --warn:#9a5b00;
+  --code-bg:#f6f8f7; --shadow:0 1px 2px rgba(20,35,30,.06),0 4px 16px rgba(20,35,30,.05);
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111715; --panel:#18201d; --ink:#e7eeeb; --muted:#9aa9a3; --line:#2c3833;
+  --stay:#5fc0b4; --stay-soft:#18322e; --cross:#e39a56; --cross-soft:#3a2816;
+  --accent:#7db3db; --accent-soft:#1a2b38; --ok:#72c07e; --warn:#e0a54a; --code-bg:#121916;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --bg:#111715; --panel:#18201d; --ink:#e7eeeb; --muted:#9aa9a3; --line:#2c3833;
+  --stay:#5fc0b4; --stay-soft:#18322e; --cross:#e39a56; --cross-soft:#3a2816;
+  --accent:#7db3db; --accent-soft:#1a2b38; --ok:#72c07e; --warn:#e0a54a; --code-bg:#121916;
+  --shadow:0 1px 2px rgba(0,0,0,.3); color-scheme:dark;}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;padding-inline:16px;padding-block:20px 40px}
+.wrap{max-width:1280px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{margin:0;text-wrap:balance;line-height:1.2}
+h1{font-size:28px;font-weight:700;letter-spacing:-.01em}
+h2{font-size:15px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+h3{font-size:16px;font-weight:600}
+p{margin:0}
+.muted{color:var(--muted)}
+.small{font-size:13px}
+.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace}
+header.top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 24px;align-items:flex-end}
+.lede{max-width:70ch;font-size:16px}
+.lede b{font-weight:600}
+.notice{border:1px dashed var(--line);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--muted);max-width:70ch}
+.meter{display:flex;gap:10px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:500;white-space:nowrap}
+.pill.stay{background:var(--stay-soft);color:var(--stay)}
+.pill.cross{background:var(--cross-soft);color:var(--cross)}
+.pill.acc{background:var(--accent-soft);color:var(--accent)}
+.dot{width:8px;height:8px;border-radius:50%;background:currentColor}
+.grid{display:grid;grid-template-columns:minmax(260px,320px) minmax(0,1fr) minmax(300px,400px);gap:18px;align-items:start}
+@media (max-width:1100px){.grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.col-ledger{grid-column:1 / -1}}
+@media (max-width:720px){.grid{grid-template-columns:minmax(0,1fr)}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.panel.pod{border-top:4px solid var(--stay)}
+.panel.ledger{border-top:4px solid var(--cross)}
+.panel-head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+label{font-size:13px;font-weight:500;display:block;margin-bottom:4px}
+select,input[type=text],input[type=search],textarea{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px}
+textarea{resize:vertical;min-height:64px}
+input[type=range]{width:100%;accent-color:var(--stay)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:999px;padding:4px 10px;font:inherit;font-size:13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--stay);border-color:var(--stay);color:var(--panel)}
+.locked{background:var(--stay-soft);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:6px;font-size:13px}
+.locked .row{display:flex;justify-content:space-between;gap:8px}
+.locked .k{color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:2px}
+.check{display:flex;align-items:center;gap:8px;font-size:14px}
+.roles{display:flex;flex-direction:column;gap:8px;max-height:760px;overflow:auto;padding-right:4px}
+.role{border:1px solid var(--line);border-radius:8px;padding:10px 12px;display:flex;flex-direction:column;gap:4px;background:var(--panel);cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.role:hover{border-color:var(--accent)}
+.role[aria-current="true"]{border-color:var(--cross);box-shadow:0 0 0 1px var(--cross)}
+.role .org{font-size:13px;color:var(--muted)}
+.role .why{font-size:12px;color:var(--stay)}
+.tags{display:flex;gap:4px;flex-wrap:wrap}
+.tag{font-size:11px;border-radius:4px;padding:1px 6px;background:var(--accent-soft);color:var(--accent)}
+.btn{font:inherit;font-weight:600;font-size:14px;border-radius:6px;padding:8px 14px;cursor:pointer;border:1px solid transparent}
+.btn.primary{background:var(--cross);color:#fff}
+.btn.primary[disabled]{opacity:.45;cursor:not-allowed}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--ink)}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tab{font:inherit;font-size:13px;font-weight:600;background:none;border:none;border-bottom:2px solid transparent;padding:6px 10px;color:var(--muted);cursor:pointer}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--cross)}
+pre{margin:0;background:var(--code-bg);border:1px solid var(--line);border-radius:6px;padding:10px;font:12px/1.5 "IBM Plex Mono",ui-monospace,Menlo,monospace;overflow-x:auto;white-space:pre}
+.promise{border-left:3px solid var(--accent);padding:6px 10px;background:var(--accent-soft);border-radius:0 6px 6px 0;font-size:13px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:13px}
+.compare div{border-radius:6px;padding:8px 10px}
+.compare .them{background:var(--cross-soft)}
+.compare .us{background:var(--stay-soft)}
+.compare b{font-size:22px;display:block;font-variant-numeric:tabular-nums}
+.status{font-size:13px;display:flex;flex-direction:column;gap:6px}
+.status .line{display:flex;gap:8px;align-items:flex-start}
+.status .ic{width:18px;flex:0 0 18px;text-align:center;font-weight:700}
+.budget{display:flex;gap:4px}
+.budget span{width:14px;height:14px;border-radius:3px;background:var(--cross)}
+.budget span.used{background:var(--line)}
+.empty{font-size:13px;color:var(--muted);padding:10px;border:1px dashed var(--line);border-radius:8px}
+footer{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:6px;max-width:90ch}
+footer a,.panel a{color:var(--accent)}
+.counter{font-variant-numeric:tabular-nums}
+@media (prefers-reduced-motion:no-preference){.flash{animation:fl .9s ease-out}@keyframes fl{from{background:var(--cross-soft)}to{background:transparent}}}
+</style>
+</head>
+<body style="margin:0">
+
+
+<div class="wrap">
+  <header class="top">
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <h1>Just the Yes</h1>
+      <p class="lede">Find volunteering that fits without handing your details to every organisation. <b>Your profile stays with you. The organisation gets your yes, and a named person promises a reply.</b></p>
+      <p class="notice">Design demo, not the product. The roles are real: <span id="roleCount">376</span> distinct London roles from the ODI's Volunteering Data Standard API, saved on 24 September 2026 (the API returned 614 activities; duplicates and ones without a location are left out). The Solid Pod is simulated in this browser tab; the proof of concept would use a real Pod, inbox and access control. Maria is an example person.</p>
+    </div>
+    <div class="meter" aria-live="polite">
+      <span class="pill stay"><span class="dot"></span>Kept in your Pod: <span class="counter" id="mKept">0</span> details</span>
+      <span class="pill cross"><span class="dot"></span>Sent to organisations: <span class="counter" id="mSent">0</span> details</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <!-- 1. The Pod -->
+    <section class="panel pod" aria-labelledby="podH">
+      <div class="panel-head"><h2 id="podH">1 · Your Pod</h2><span class="pill stay small">private</span></div>
+      <p class="small muted">Everything here stays with you. Fit is checked on this device, so nothing is sent while you look.</p>
+      <div class="field"><label for="fName">First name</label><input id="fName" type="text" value="Maria"></div>
+      <div class="field"><label for="fContact">Contact</label><input id="fContact" type="text" value="maria@example.org"></div>
+      <div class="field"><label for="fArea">Where you live</label>
+        <select id="fArea">
+          <option value="51.5390,-0.1426">Camden</option>
+          <option value="51.5450,-0.0553">Hackney</option>
+          <option value="51.5322,-0.1058" selected>Islington</option>
+          <option value="51.4613,-0.1156">Lambeth (Brixton)</option>
+          <option value="51.4946,-0.0997">Southwark</option>
+          <option value="51.5194,-0.0612">Tower Hamlets</option>
+          <option value="51.4991,-0.1938">Kensington</option>
+          <option value="51.4571,-0.1931">Wandsworth</option>
+          <option value="51.4975,-0.1357">Westminster</option>
+        </select></div>
+      <div class="field"><label for="fDist">How far you'll travel: <span id="distOut" class="counter">4</span> km</label><input id="fDist" type="range" min="1" max="10" step="0.5" value="4"></div>
+      <div class="field"><label id="intL">What you care about</label><div class="chips" id="chips" aria-labelledby="intL"></div></div>
+      <div class="field"><label for="fAvail">When you're free</label><input id="fAvail" type="text" value="Weekday evenings and some Saturdays"></div>
+      <label class="check"><input type="checkbox" id="fRemote"> Happy to volunteer online</label>
+      <div class="locked" aria-label="Details that never leave your Pod">
+        <strong class="small">Never sent in a first message</strong>
+        <div class="row"><span class="k">Date of birth</span><span>12 Mar 1991</span></div>
+        <div class="row"><span class="k">Access needs</span><span>Step-free access</span></div>
+        <div class="row"><span class="k">Referees</span><span>2 contacts</span></div>
+        <div class="row"><span class="k">Criminal record questions</span><span>Not asked here</span></div>
+        <p class="muted" style="font-size:12px">In a small sample of 8 public UK volunteer forms, 6 ask about convictions and 7 want two referees at the first step. Checks a role really needs happen after both sides say yes.</p>
+      </div>
+    </section>
+
+    <!-- 2. Roles -->
+    <section class="panel" aria-labelledby="rolesH">
+      <div class="panel-head"><h2 id="rolesH">2 · Roles that fit</h2><span class="small muted" id="fitCount"></span></div>
+      <input type="search" id="q" placeholder="Search titles and organisations" aria-label="Search roles">
+      <div class="roles" id="roles" role="list"></div>
+    </section>
+
+    <!-- 3. The yes and the ledger -->
+    <section class="panel ledger col-ledger" aria-labelledby="yesH">
+      <div class="panel-head"><h2 id="yesH">3 · Your yes</h2>
+        <span class="small muted">Optional monthly allowance (tested in the pilot)</span></div>
+      <div class="budget" id="budget" aria-label="Yeses left this month"></div>
+      <div id="composer"><p class="empty">Pick a role to see exactly what would leave your Pod.</p></div>
+      <div class="tabs" role="tablist">
+        <button class="tab" role="tab" id="tabL" aria-selected="true" aria-controls="paneL">What crossed</button>
+        <button class="tab" role="tab" id="tabC" aria-selected="false" aria-controls="paneC">Coordinator's inbox</button>
+        <button class="tab" role="tab" id="tabT" aria-selected="false" aria-controls="paneT">Solid messages</button>
+      </div>
+      <div id="paneL" role="tabpanel" aria-labelledby="tabL"><div class="status" id="status"><p class="empty">Nothing has left your Pod yet.</p></div></div>
+      <div id="paneC" role="tabpanel" aria-labelledby="tabC" hidden><div id="inbox"><p class="empty">The inbox is empty until you send a yes.</p></div></div>
+      <div id="paneT" role="tabpanel" aria-labelledby="tabT" hidden><div id="turtle" style="display:flex;flex-direction:column;gap:8px"><p class="empty">The Turtle for each message appears here.</p></div></div>
+    </section>
+  </div>
+
+  <footer>
+    <p><b>What is real:</b> role titles, organisations, locations and links come from the <a href="https://api.volunteeringdata.io/swagger" target="_blank" rel="noopener">Volunteering Data Standard API</a> (the dataset's metadata gives its licence as CC BY 4.0; listings are the named organisations' own). The API returned 614 activities within 8 km of central London on 24 September 2026; none had structured skills, requirements or times filled in, so fit here uses distance and keywords. Interest areas and the "online" option are guessed from each listing's text, so some are wrong. Proposing person-side fields is part of the project.</p>
+    <p><b>What is simulated:</b> the Pod, the inbox, the reply and the access rules. The messages shown under "Solid messages" are the ones the proof of concept would write and send: a yes resource in the volunteer's Pod, an ActivityStreams Offer to the organisation's inbox (Linked Data Notifications), a read rule for one named coordinator (shown in WAC; the access model is still to be chosen), and the reply. The Offer names the volunteer's WebID, so the organisation can see their public profile card, but never the private details in their Pod. Reply promises and capacities are examples; in the pilot each organisation sets its own. None of these organisations has joined a pilot.</p>
+    <p>Just the Yes · a design by Daniel Bulla, Bratislava · built with an AI coding assistant · Code MIT, text CC BY 4.0</p>
+  </footer>
+</div>
+
+<script>
+(async function(){
+  const ROLES = (await Promise.all([1,2,3,4].map(function(n){return fetch('data/roles-'+n+'.json').then(function(r){return r.json();});}))).flat();
+  const CATS = [['children','Children and young people'],['older','Older people'],['green','Gardens and environment'],['food','Food and homelessness'],['health','Health and wellbeing'],['arts','Arts and heritage'],['refugees','Refugees'],['animals','Animals'],['skills','Skills-based (digital, admin, trustee)']];
+  const CATNAME = Object.fromEntries(CATS);
+  const BUDGET = 5;
+  const state = { interests: new Set(['children','older']), selected: null, used: 0, sent: [], kept: 0, sentFields: 0 };
+  const $ = id => document.getElementById(id);
+  document.getElementById('roleCount').textContent = ROLES.length;
+
+  // chips
+  const chips = $('chips');
+  CATS.forEach(([k,label])=>{
+    const b=document.createElement('button'); b.type='button'; b.className='chip'; b.textContent=label;
+    b.setAttribute('aria-pressed', state.interests.has(k)); b.dataset.k=k;
+    b.addEventListener('click',()=>{ state.interests.has(k)?state.interests.delete(k):state.interests.add(k); b.setAttribute('aria-pressed', state.interests.has(k)); render(); });
+    chips.appendChild(b);
+  });
+
+  function km(a,b,c,d){const R=6371,t=x=>x*Math.PI/180;const dl=t(c-a),dg=t(d-b);const h=Math.sin(dl/2)**2+Math.cos(t(a))*Math.cos(t(c))*Math.sin(dg/2)**2;return 2*R*Math.asin(Math.sqrt(h));}
+  function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+  function ttl(s){return String(s).replace(/\\/g,'\\\\').replace(/"/g,'\\"').replace(/\n/g,' ');}
+  function fmtDate(d){return d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});}
+  function iso(d){return d.toISOString().replace(/\.\d{3}Z$/,'Z');}
+
+  function keptCount(){
+    // name, contact, area, distance, interests, availability, remote, dob, access, referees
+    return 10;
+  }
+
+  function fits(){
+    const [lat,lon]=$('fArea').value.split(',').map(Number);
+    const maxKm=Number($('fDist').value), remoteOk=$('fRemote').checked, q=$('q').value.trim().toLowerCase();
+    const out=[];
+    for(const r of ROLES){
+      const d=km(lat,lon,r.la,r.lo);
+      const inRange=d<=maxKm, viaRemote=remoteOk&&r.r;
+      if(!inRange&&!viaRemote) continue;
+      const hits=r.c.filter(c=>state.interests.has(c));
+      if(state.interests.size&&!hits.length) continue;
+      if(q&&!(r.t.toLowerCase().includes(q)||r.o.toLowerCase().includes(q))) continue;
+      out.push({r,d,hits,score:hits.reduce((s,c)=>s+(r.s[c]||0),0),viaRemote:!inRange&&viaRemote});
+    }
+    out.sort((a,b)=>b.score-a.score||a.d-b.d);
+    return out;
+  }
+
+  function render(){
+    $('distOut').textContent=$('fDist').value;
+    const list=fits(); const box=$('roles'); box.innerHTML='';
+    $('fitCount').textContent=list.length+' of '+ROLES.length+' checked on this device';
+    if(!list.length){box.innerHTML='<p class="empty">No roles fit yet. Try a longer distance or another interest.</p>';}
+    list.slice(0,60).forEach(({r,d,hits,viaRemote})=>{
+      const b=document.createElement('button'); b.type='button'; b.className='role'; b.setAttribute('role','listitem');
+      if(state.selected&&state.selected.i===r.i) b.setAttribute('aria-current','true');
+      const why=[viaRemote?'online':(d.toFixed(1)+' km away')].concat(hits.map(h=>CATNAME[h].split(' (')[0].toLowerCase()));
+      b.innerHTML='<h3>'+esc(r.t)+'</h3><span class="org">'+esc(r.o)+(r.a?' · '+esc(r.a):'')+'</span><span class="why">Fits because: '+esc(why.join(' · '))+'</span>';
+      b.addEventListener('click',()=>{state.selected=r;render();compose();});
+      box.appendChild(b);
+    });
+    $('mKept').textContent=keptCount();
+    $('mSent').textContent=state.sentFields;
+    renderBudget();
+  }
+
+  function renderBudget(){
+    const b=$('budget'); b.innerHTML='';
+    for(let i=0;i<BUDGET;i++){const s=document.createElement('span'); if(i<state.used) s.className='used'; b.appendChild(s);}
+    b.setAttribute('aria-label',(BUDGET-state.used)+' of '+BUDGET+' yeses left this month');
+  }
+
+  function compose(){
+    const r=state.selected; if(!r) return;
+    const due=new Date(Date.now()+10*864e5);
+    const already=state.sent.find(s=>s.r.i===r.i);
+    const left=BUDGET-state.used;
+    $('composer').innerHTML=
+      '<div style="display:flex;flex-direction:column;gap:10px">'+
+      '<h3>'+esc(r.t)+'</h3><p class="small muted">'+esc(r.d)+'</p>'+
+      (r.u?'<p class="small"><a href="'+esc(r.u)+'" target="_blank" rel="noopener">Original listing</a></p>':'')+
+      '<div class="promise"><b>Reply promise (example):</b> a named volunteer coordinator replies by <b>'+fmtDate(due)+'</b>. This role can answer <b>'+slots(r)+' more yeses</b> on time this month. If the coordinator doesn\'t reply by the date, your yes comes back to you.</div>'+
+      '<p class="small"><b>Only this leaves your Pod.</b> Untick anything you don\'t want to send.</p>'+
+      '<label class="check"><input type="checkbox" class="inc" data-f="name" checked> First name: '+esc($('fName').value)+'</label>'+
+      '<label class="check"><input type="checkbox" class="inc" data-f="contact" checked> Contact: '+esc($('fContact').value)+'</label>'+
+      '<label class="check"><input type="checkbox" class="inc" data-f="avail" checked> When I\'m free: '+esc($('fAvail').value)+'</label>'+
+      '<div class="field"><label for="note">A short note (up to 280 characters)</label><textarea id="note" maxlength="280">I\'d like to help. Happy to start with a short chat.</textarea></div>'+
+      '<div class="compare"><div class="them"><b>6 of 8</b>public volunteer forms in a small sample ask about convictions at the first step</div><div class="us">This yes<b id="nFields">4</b>details, each one approved by you</div></div>'+
+      '<div class="btn-row"><button class="btn primary" id="sendBtn" '+((already||left<=0)?'disabled':'')+'>'+(already?'Yes already sent':left<=0?'No yeses left this month':'Send my yes')+'</button></div>'+
+      '</div>';
+    const upd=()=>{const n=[...document.querySelectorAll('.inc')].filter(x=>x.checked).length+($('note').value.trim()?1:0);$('nFields').textContent=n;};
+    document.querySelectorAll('.inc').forEach(x=>x.addEventListener('change',upd)); $('note').addEventListener('input',upd); upd();
+    const sb=$('sendBtn'); if(sb&&!sb.disabled) sb.addEventListener('click',()=>send(r,due));
+  }
+
+  function slots(r){let h=0;for(const ch of r.i)h=(h*31+ch.charCodeAt(0))>>>0;return 2+(h%7);}
+  function slug(s){return s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);}
+
+  function send(r,due){
+    const inc=f=>{const el=document.querySelector('.inc[data-f="'+f+'"]');return el&&el.checked;};
+    const note=$('note').value.trim();
+    const fields={};
+    if(inc('name')) fields.name=$('fName').value;
+    if(inc('contact')) fields.contact=$('fContact').value;
+    if(inc('avail')) fields.avail=$('fAvail').value;
+    if(note) fields.note=note;
+    const n=Object.keys(fields).length;
+    const now=new Date(); const id=now.toISOString().slice(0,10)+'-'+slug(r.t);
+    const pod='https://maria.pod.example/'; const yesUrl=pod+'yes/'+id;
+    const orgBase='https://org.example/'+slug(r.o)+'/';
+    const coord=orgBase+'people/coordinator#me';
+    const rec={r,fields,n,due,yesUrl,coord,orgBase,sentAt:now,status:'waiting',reply:null};
+    state.sent.push(rec); state.used++; state.sentFields+=n;
+    render(); compose(); renderLedger(); renderInbox(); renderTurtle();
+    const tl=$('tabL'); tl.click();
+  }
+
+  function renderLedger(){
+    const box=$('status');
+    if(!state.sent.length){box.innerHTML='<p class="empty">Nothing has left your Pod yet.</p>';return;}
+    box.innerHTML=state.sent.slice().reverse().map(s=>{
+      const f=Object.keys(s.fields).map(k=>({name:'first name',contact:'contact',avail:'availability',note:'a note'}[k])).join(', ');
+      let lines='<div class="line"><span class="ic" style="color:var(--cross)">→</span><span><b>'+esc(s.r.t)+'</b><br><span class="muted">'+esc(s.r.o)+'</span></span></div>'+
+        '<div class="line"><span class="ic">•</span><span>Sent '+s.n+' details: '+esc(f)+'. Not sent: your profile, your interests, your area, how far you travel, any score.</span></div>'+
+        '<div class="line"><span class="ic">•</span><span>Read access for one named coordinator, to this one yes only.</span></div>';
+      if(s.status==='waiting') lines+='<div class="line"><span class="ic" style="color:var(--warn)">…</span><span>Waiting for a reply by '+fmtDate(s.due)+'. <button class="btn ghost small lapse" data-i="'+s.r.i+'" style="padding:2px 8px;font-size:12px">Let the date pass</button></span></div>';
+      if(s.status==='replied') lines+='<div class="line"><span class="ic" style="color:var(--ok)">✓</span><span>'+esc(s.reply)+' Access removed.</span></div>';
+      if(s.status==='lapsed') lines+='<div class="line"><span class="ic" style="color:var(--warn)">↺</span><span>No reply by the promised date. Access removed and your yes returned to you.</span></div>';
+      return '<div class="flash" style="border-bottom:1px solid var(--line);padding-bottom:8px;display:flex;flex-direction:column;gap:6px">'+lines+'</div>';
+    }).join('');
+    box.querySelectorAll('.lapse').forEach(b=>b.addEventListener('click',()=>{const s=state.sent.find(x=>x.r.i===b.dataset.i); if(s&&s.status==='waiting'){s.status='lapsed'; state.used=Math.max(0,state.used-1); render(); compose(); renderLedger(); renderInbox(); renderTurtle();}}));
+  }
+
+  function renderInbox(){
+    const box=$('inbox'); const open=state.sent.filter(s=>s.status==='waiting');
+    const done=state.sent.filter(s=>s.status!=='waiting');
+    if(!state.sent.length){box.innerHTML='<p class="empty">The inbox is empty until you send a yes.</p>';return;}
+    let h='<p class="small muted" style="margin-bottom:8px">This is what the organisation sees. There is no profile to open and no score to sort by.</p>';
+    open.forEach(s=>{
+      h+='<div style="border:1px solid var(--line);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;margin-bottom:8px">'+
+        '<b>'+esc(s.fields.name||'A volunteer')+' said yes to "'+esc(s.r.t)+'"</b>'+
+        (s.fields.avail?'<span class="small">Free: '+esc(s.fields.avail)+'</span>':'')+
+        (s.fields.note?'<span class="small">"'+esc(s.fields.note)+'"</span>':'')+
+        (s.fields.contact?'<span class="small muted">Contact: '+esc(s.fields.contact)+'</span>':'')+
+        '<span class="small" style="color:var(--warn)">Reply promised by '+fmtDate(s.due)+'</span>'+
+        '<div class="btn-row"><button class="btn ghost rep" data-a="Accept" data-i="'+s.r.i+'">Invite for a chat</button><button class="btn ghost rep" data-a="TentativeReject" data-i="'+s.r.i+'">Not now</button><button class="btn ghost rep" data-a="Reject" data-i="'+s.r.i+'">Not a fit</button></div></div>';
+    });
+    if(!open.length) h+='<p class="empty">No open yeses. Every yes has an answer.</p>';
+    if(done.length) h+='<p class="small muted">Answered or expired: '+done.length+'</p>';
+    box.innerHTML=h;
+    box.querySelectorAll('.rep').forEach(b=>b.addEventListener('click',()=>{
+      const s=state.sent.find(x=>x.r.i===b.dataset.i); if(!s) return;
+      const msg={Accept:'Invited for a 20-minute chat.',TentativeReject:'Not now: the role is full this month.',Reject:'Not a fit this time, with thanks.'}[b.dataset.a];
+      s.status='replied'; s.reply='Reply from the coordinator: '+msg; s.replyType=b.dataset.a; s.repliedAt=new Date();
+      renderLedger(); renderInbox(); renderTurtle(); $('tabL').click();
+    }));
+  }
+
+  function renderTurtle(){
+    const box=$('turtle'); if(!state.sent.length){box.innerHTML='<p class="empty">The Turtle for each message appears here.</p>';return;}
+    const s=state.sent[state.sent.length-1];
+    const role='https://id.volunteeringdata.io/'+s.r.i;
+    let yes='@prefix jty:   <https://example.org/just-the-yes#> .\n@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .\n@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .\n\n<> a jty:Yes ;\n    jty:forRole <'+role+'> ;\n';
+    if(s.fields.name) yes+='    vcard:fn "'+ttl(s.fields.name)+'" ;\n';
+    if(s.fields.contact) yes+='    vcard:hasEmail <mailto:'+ttl(s.fields.contact)+'> ;\n';
+    if(s.fields.avail) yes+='    jty:availability "'+ttl(s.fields.avail)+'" ;\n';
+    if(s.fields.note) yes+='    jty:note "'+ttl(s.fields.note)+'" ;\n';
+    yes+='    jty:shareUntil "'+iso(s.due)+'"^^xsd:dateTime .';
+    const offer='@prefix as: <https://www.w3.org/ns/activitystreams#> .\n\n<> a as:Offer ;\n    as:actor <https://maria.pod.example/profile/card#me> ;\n    as:object <'+s.yesUrl+'> ;\n    as:target <'+s.orgBase+'profile/card#org> ;\n    as:context <'+role+'> ;\n    as:summary "Expression of interest" .';
+    const acl=s.status==='waiting'
+      ?'# One option (WAC). Which access model to use is a workshop decision.\n@prefix acl: <http://www.w3.org/ns/auth/acl#> .\n\n<#owner> a acl:Authorization ;\n    acl:agent <https://maria.pod.example/profile/card#me> ;\n    acl:accessTo <'+s.yesUrl+'> ;\n    acl:mode acl:Read, acl:Write, acl:Control .\n\n<#coordinator> a acl:Authorization ;\n    acl:agent <'+s.coord+'> ;\n    acl:accessTo <'+s.yesUrl+'> ;\n    acl:mode acl:Read .'
+      :'# The coordinator\'s read rule has been removed.\n@prefix acl: <http://www.w3.org/ns/auth/acl#> .\n\n<#owner> a acl:Authorization ;\n    acl:agent <https://maria.pod.example/profile/card#me> ;\n    acl:accessTo <'+s.yesUrl+'> ;\n    acl:mode acl:Read, acl:Write, acl:Control .';
+    let h='<p class="small muted">Latest yes, as the proof of concept would write it. Role IRI is the real one from the standard; Pod and organisation addresses are placeholders.</p>'+
+      '<p class="small"><b>1. The yes</b>, written in your Pod</p><pre>'+esc(yes)+'</pre>'+
+      '<p class="small"><b>2. The notification</b>, sent to the organisation\'s inbox (links only)</p><pre>'+esc(offer)+'</pre>'+
+      '<p class="small"><b>3. The access rule</b> on that one resource</p><pre>'+esc(acl)+'</pre>';
+    if(s.status==='replied'){
+      h+='<p class="small"><b>4. The reply</b>, sent to your inbox</p><pre>'+esc('@prefix as: <https://www.w3.org/ns/activitystreams#> .\n\n<> a as:'+s.replyType+' ;\n    as:actor <'+s.coord+'> ;\n    as:context <'+s.yesUrl+'> ;\n    as:summary "'+ttl(s.reply.replace('Reply from the coordinator: ',''))+'" .')+'</pre>';
+    }
+    box.innerHTML=h;
+  }
+
+  // tabs
+  const tabs=[['tabL','paneL'],['tabC','paneC'],['tabT','paneT']];
+  tabs.forEach(([t,p])=>$(t).addEventListener('click',()=>{tabs.forEach(([t2,p2])=>{$(t2).setAttribute('aria-selected',t2===t);$(p2).hidden=t2!==t;});}));
+
+  ['fArea','fDist','fRemote','q'].forEach(id=>$(id).addEventListener('input',render));
+  ['fName','fContact','fAvail'].forEach(id=>$(id).addEventListener('input',()=>{if(state.selected) compose();}));
+  render();
+  // open in a working state: preselect the best fit
+  const first=fits()[0]; if(first){state.selected=first.r; render(); compose();}
+})();
+</script>
+
+</body>
+</html>
