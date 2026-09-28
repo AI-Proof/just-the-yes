@@ -1,0 +1,19 @@
+# Web Access Control (WAC) for the yes resource.
+# People log in to Solid, not organisations, so read access goes to the coordinator named in the
+# role's reply promise (jty:reviewer). An organisation with several coordinators could use
+# acl:agentGroup with a group document instead.
+# WAC (and ACP) have no expiry date, so the volunteer's app removes the coordinator's rule when the
+# reply arrives or the deadline passes, the next time the app runs. On Inrupt ESS, an access grant
+# with an expiration date is enforced by the server instead. Which model to use is a workshop question.
+
+@prefix acl: <http://www.w3.org/ns/auth/acl#> .
+
+<#owner> a acl:Authorization ;
+    acl:agent <https://maria.pod.example/profile/card#me> ;
+    acl:accessTo <./2026-11-12-garden> ;
+    acl:mode acl:Read, acl:Write, acl:Control .
+
+<#coordinator> a acl:Authorization ;
+    acl:agent <https://garden-charity.example/people/sam#me> ;
+    acl:accessTo <./2026-11-12-garden> ;
+    acl:mode acl:Read .

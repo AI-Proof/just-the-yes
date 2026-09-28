@@ -1,0 +1,39 @@
+# A role, as a pilot organisation publishes it in its own Pod.
+# Most terms reuse the ODI's Volunteering Data Standard (https://standard.volunteeringdata.io/).
+# The "jty:" terms are a DRAFT extension for this proof of concept (placeholder namespace).
+# Some could later be proposed as optional properties in the standard itself.
+
+@prefix vol:  <https://ns.volunteeringdata.io/> .
+@prefix jty:  <https://example.org/just-the-yes#> .
+@prefix ldp:  <http://www.w3.org/ns/ldp#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+
+<#activity> a vol:Activity ;
+    vol:activityTitle "Community garden helper (Saturday mornings)" ;
+    vol:activityOrganisation <https://garden-charity.example/profile/card#org> ;
+    vol:activityRole <#role> .
+
+<#role> a vol:Role ;
+    vol:roleActivity <#activity> ;
+    vol:roleTitle "Community garden helper" ;
+    vol:roleSkill vol:BasicEquipmentUse ;
+    vol:roleAccessibility vol:BuildingAccessibilityFeatures ;   # the standard's broad category
+    jty:accessNote "Step-free paths from the gate to the beds" ;     # the specific feature, as text for now
+    vol:roleCommitment "3 hours on Saturday mornings" ;
+    vol:roleMinimumAge 16 ;
+
+    # Draft: the organisation's side of the deal
+    jty:replyPromise [
+        a jty:ReplyPromise ;
+        jty:reviewer <https://garden-charity.example/people/sam#me> ;   # the coordinator who replies (a person's WebID)
+        jty:replyWithin "P7D"^^xsd:duration ;                            # reply within 7 days of a yes arriving
+        jty:weeklyCapacity 10                                            # yeses the organisation can answer per week
+    ] ;
+
+    # Draft: what a first message may contain, and what waits until both sides want to go ahead.
+    # In the workshop this could become a SHACL shape instead of a list.
+    jty:firstMessageAsks jty:FirstName, jty:ContactEmail, jty:Availability, jty:ShortNote ;
+    jty:laterSteps jty:References, jty:BackgroundCheck ;
+
+    # Where yeses for this role are delivered (Linked Data Notifications)
+    ldp:inbox <https://garden-charity.example/inbox/> .

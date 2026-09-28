@@ -1,0 +1,14 @@
+# The coordinator's reply, POSTed to the volunteer's inbox.
+# as:Accept, as:TentativeReject or as:Reject. A named person signs it.
+# as:context points back to the yes, so the volunteer's app can match reply and yes.
+
+@prefix as:  <https://www.w3.org/ns/activitystreams#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<> a as:Accept ;
+    as:actor <https://garden-charity.example/people/sam#me> ;
+    as:object <https://garden-charity.example/inbox/offer-0412> ;
+    as:inReplyTo <https://garden-charity.example/inbox/offer-0412> ;
+    as:context <https://maria.pod.example/yes/2026-11-12-garden> ;
+    as:summary "Thanks Maria. Could you come for a 20-minute chat next Saturday at 10:00? Sam, volunteer coordinator." ;
+    as:published "2026-11-15T16:05:00Z"^^xsd:dateTime .

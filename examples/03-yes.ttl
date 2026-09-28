@@ -1,0 +1,17 @@
+# The "yes": a small resource the volunteer's app writes in the volunteer's own Pod.
+# It holds only what the role asks for in a first message, and Maria approves it before it is shared.
+# The organisation gets read access to this one resource until it replies or until shareUntil.
+
+@prefix jty:   <https://example.org/just-the-yes#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+@prefix dct:   <http://purl.org/dc/terms/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+
+<> a jty:Yes ;
+    jty:forRole <https://garden-charity.example/roles/garden#role> ;
+    vcard:fn "Maria" ;
+    vcard:hasEmail <mailto:maria@example.org> ;
+    jty:availability "Saturday mornings from November" ;
+    jty:note "I can do light gardening and I am happy to learn." ;
+    jty:shareUntil "2026-11-19T23:59:59Z"^^xsd:dateTime ;
+    dct:created "2026-11-12T09:30:00Z"^^xsd:dateTime .

@@ -1,0 +1,14 @@
+# The notification the volunteer's app POSTs to the role's inbox (Linked Data Notifications).
+# It uses the ActivityStreams 2.0 vocabulary and contains only links, not personal details.
+# as:target is the recipient of the offer; as:context is the role it concerns.
+
+@prefix as:  <https://www.w3.org/ns/activitystreams#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<> a as:Offer ;
+    as:actor <https://maria.pod.example/profile/card#me> ;
+    as:object <https://maria.pod.example/yes/2026-11-12-garden> ;
+    as:target <https://garden-charity.example/profile/card#org> ;
+    as:context <https://garden-charity.example/roles/garden#role> ;
+    as:summary "Expression of interest" ;
+    as:published "2026-11-12T09:30:00Z"^^xsd:dateTime .

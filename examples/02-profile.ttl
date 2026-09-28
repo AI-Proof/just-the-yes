@@ -1,0 +1,19 @@
+# The volunteer's private profile. Stored in their own Pod, readable only by them.
+# Their app uses it to check fit on their device. It is never sent to an organisation.
+# All values here are synthetic test data.
+
+@prefix vol:   <https://ns.volunteeringdata.io/> .
+@prefix jty:   <https://example.org/just-the-yes#> .
+@prefix vcard: <http://www.w3.org/2006/vcard/ns#> .
+
+<#me> a jty:VolunteerProfile ;
+    vcard:fn "Maria Example" ;
+    jty:offersSkill vol:BasicEquipmentUse, vol:PatienceAndUnderstanding ;
+    jty:caresAbout vol:Environment, vol:LocalCommunity ;
+    # The standard's accessibility list has no "step-free access" concept yet, so this is a draft term.
+    # It is used only to filter roles on Maria's device, and shared only if she chooses.
+    jty:needs jty:StepFreeAccess ;
+    jty:availability "Saturday mornings" ;
+    jty:maxTravelKm 5 ;
+    jty:area "Loughborough" ;          # a coarse area; no street address is needed to match
+    jty:yesesPerMonth 5 .              # the monthly number of yeses (a parameter the pilot will test)
