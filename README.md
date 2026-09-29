@@ -57,7 +57,7 @@ Just the Yes tests one rule from the General Matchmaking Protocol, a longer desi
 - [examples/](examples/): example data in Turtle (a role, a private profile, a yes, the notification, a reply, an access rule). All of it is synthetic.
 - [docs/baseline-forms.md](docs/baseline-forms.md): the eight forms, what each asks, and how I counted.
 - [docs/background/](docs/background/): background written for job markets, where the idea started: a two-page summary of the General Matchmaking Protocol, and a two-page note with a small simulation on how many priority applications a market can honour. Not part of the volunteering proof of concept.
-- [demo/](demo/): the browser demo, a single self-contained page. The role snapshot it uses (376 roles, pulled from the Volunteering Data Standard API on 24 September 2026; the dataset's metadata gives its licence as CC BY 4.0) is embedded in the page.
+- [demo/](demo/): the browser demo, a static page with no server. The role snapshot it uses (376 roles, pulled from the Volunteering Data Standard API on 24 September 2026; the dataset's metadata gives its licence as CC BY 4.0) is loaded from data files in [demo/data/](demo/data/).
 
 ## How this was made
 
